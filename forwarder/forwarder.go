@@ -6,8 +6,8 @@ import (
 	"os/exec"
 	"time"
 
-	"github.com/digital-wonderland/docker-logstash-forwarder/forwarder/config"
-	"github.com/digital-wonderland/docker-logstash-forwarder/utils"
+	"github.com/TaDaweb/docker-logstash-forwarder/forwarder/config"
+	"github.com/TaDaweb/docker-logstash-forwarder/utils"
 	docker "github.com/fsouza/go-dockerclient"
 	logging "github.com/op/go-logging"
 )
