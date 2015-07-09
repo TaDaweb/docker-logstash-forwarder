@@ -20,6 +20,7 @@ var (
 	log              = logging.MustGetLogger("main")
 	logFormat        = logging.MustStringFormatter("%{color}%{time:2006/01/02 15:04:05.000000} %{level} [%{shortfunc}]%{color:reset} %{message}")
 	logstashEndPoint string
+	quiet            bool
 	wg               sync.WaitGroup
 )
 
@@ -27,8 +28,9 @@ func initFlags() {
 	flag.StringVar(&dockerEndPoint, "docker", "", "docker api endpoint - defaults to $DOCKER_HOST or unix:///var/run/docker.sock")
 	flag.BoolVar(&debug, "debug", false, "verbose logging")
 	flag.IntVar(&laziness, "lazyness", 5, "number of seconds to wait after an event before generating new configuration")
-	flag.StringVar(&logstashEndPoint, "logstash", "", "logstash endpoint - defaults to $LOGSTASH_HOST or logstash:5043")
+	flag.StringVar(&logstashEndPoint, "logstash", "", "logstash endpoint - defaults to $LOGSTASH_HOST or logstash:5043. Multiple hosts must be separated with ','")
 	flag.StringVar(&configFile, "config", "", "logstash-forwarder config")
+	flag.BoolVar(&quiet, "quiet", false, "run logstash-forwarder with -quiet")
 	flag.Parse()
 }
 
@@ -77,7 +79,7 @@ func generateConfig() {
 	utils.Refresh.Mu.Lock()
 	utils.Refresh.IsTriggered = false
 	utils.Refresh.Mu.Unlock()
-	forwarder.TriggerRefresh(client, getLogstashEndpoint(), configFile)
+	forwarder.TriggerRefresh(client, getLogstashEndpoint(), configFile, quiet)
 }
 
 func getDockerEndpoint() string {
